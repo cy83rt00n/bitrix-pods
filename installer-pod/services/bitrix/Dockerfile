@@ -1,13 +1,13 @@
 FROM debian:buster-slim
 
-COPY dist /persistent-data/bitrix-core
+COPY dist /tmp/bitrix-core
 COPY volumes/etc/lsyncd /etc/lsyncd
 COPY volumes/docker-entrypoint.sh /docker-entrypoint.sh
 
 RUN apt-get update \
 && apt-get install --yes lsyncd \
 && chmod +x /docker-entrypoint.sh \
-&& mkdir /tmp/bitrix-core \
+# && mkdir /tmp/bitrix-core \
 && chgrp -Rf www-data /tmp/bitrix-core \
 && chmod -Rf g+rwx /tmp/bitrix-core \
 && mkdir -p /persistent-data/bitrix-core \

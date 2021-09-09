@@ -4,17 +4,32 @@ settings {
         insist = true
 }
 
-daemon_bash = {
-    delay = 5,
-    maxProcesses = 3,
-    onCreate = "cp -r ^sourcePathname ^targetPathname",
-    onModify = "cp -r ^sourcePathname ^targetPathname",
-    onDelete = "rm -rf ^targetPathname",
-    onMove   = "mv ^o.targetPathname ^d.targetPathname",
-}
+--daemon_bash = {
+--    delay = 5,
+--    maxProcesses = 3,
+--    onCreate = "cp -r ^sourcePathname ^targetPathname",
+--    onModify = "cp -r ^sourcePathname ^targetPathname",
+--    onDelete = "rm -rf ^targetPathname",
+--    onMove   = "mv ^o.targetPathname ^d.targetPathname",
+--}
+--
+--sync {
+--    daemon_bash,
+--    source = "/tmp/bitrix-core",
+--    target = "/persistent-data/bitrix-core"
+--}
 
 sync {
-    daemon_bash,
+    default.rsync,
+    delay = 5,
+    maxProcesses = 3,
     source = "/tmp/bitrix-core",
-    target = "/persistent-data/bitrix-core"
+    target = "/persistent-data/bitrix-core",
+    rsync = {
+            timeout = 3000,
+            update = true,
+            archive = true,
+            compress = true,
+            times = false,
+    }
 }

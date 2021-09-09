@@ -24,6 +24,7 @@ services:
       - "${PHP_VOLUMES_PREFIX}/usr/local/etc/php/php.ini:/usr/local/etc/php/php.ini"
       - "${PHP_VOLUMES_PREFIX}/docker-php-entrypoint:/docker-php-entrypoint"
       - 'bitrix-core:/opt/www'
+      # - '${PHP_VOLUMES_PREFIX}/.settings.php:/opt/www/bitrix/.settings.php'
     depends_on:
         - lighttpd
         - bitrix
@@ -48,11 +49,13 @@ services:
     image: bx-origin_bitrix:latest
     container_name: "${COMPOSE_PROJECT_NAME}_bitrix"
     volumes:
-      - 'bitrix-core:/tmp/bitrix'
+      - 'bitrix-core:/tmp/bitrix-core'
 
   bitrix-db:
     image: bx-origin_bitrix-db:latest
     container_name: "${COMPOSE_PROJECT_NAME}_bitrix-db"
+    volumes:
+      # - '${POD_ROOT}/services/bitrix-db/volumes/docker-entrypoint.sh:/docker-entrypoint.sh'
     volumes:
       - 'bitrix-db:/tmp/mysql'
 
