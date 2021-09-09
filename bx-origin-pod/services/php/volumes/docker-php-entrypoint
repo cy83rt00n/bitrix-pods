@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+if [ ! -d /opt/www ];then
+  mkdir /opt/www
+fi
+
+chgrp -R www-data /opt/www && chmod -Rf g+rwx /opt/www
+
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+	set -- php-fpm "$@"
+fi
+
+exec "$@"

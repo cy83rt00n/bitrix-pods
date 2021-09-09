@@ -1,0 +1,7 @@
+version: "3.0"
+
+services:
+  bitrix:
+    build: ./
+    image: cy-bitrix-data:latest
+    container_name: "cy-bitrix-data"

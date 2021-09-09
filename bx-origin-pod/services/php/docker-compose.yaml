@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+
+    php:
+        build:
+            context: ""
+            dockerfile: ./docker-services/php/Dockerfile
+        container_name: "${COMPOSE_PROJECT_NAME}_php"
+        entrypoint: ['/docker-php-entrypoint', 'php-fpm']
+        volumes:
+            - "${PHP_VOLUMES_PREFIX}/usr/local/etc/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf"
+            - "${PHP_VOLUMES_PREFIX}/usr/local/etc/php/php.ini:/usr/local/etc/php/php.ini"
+            - "${PHP_VOLUMES_PREFIX}/docker-php-entrypoint:/docker-php-entrypoint"

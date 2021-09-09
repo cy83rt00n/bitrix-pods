@@ -1,0 +1,71 @@
+version: "3"
+
+services:
+
+  lighttpd:
+    build: ${POD_ROOT}/services/lighttpd
+    container_name: "${COMPOSE_PROJECT_NAME}_lighttpd"
+    tty: true
+    ports:
+      - "11180:80"
+    volumes:
+      - "${LIGHTTPD_VOLUMES_PREFIX}/etc/lighttpd:/etc/lighttpd"
+      - 'bitrix-core:/opt/www'
+
+  php:
+    build: ${POD_ROOT}/services/php
+    container_name: "${COMPOSE_PROJECT_NAME}_php"
+    entrypoint: [ '/docker-php-entrypoint', 'php-fpm' ]
+    network_mode: service:lighttpd
+    volumes:
+      - "${PHP_VOLUMES_PREFIX}/usr/local/etc/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf"
+      - "${PHP_VOLUMES_PREFIX}/usr/local/etc/php/php.ini:/usr/local/etc/php/php.ini"
+      - "${PHP_VOLUMES_PREFIX}/docker-php-entrypoint:/docker-php-entrypoint"
+      - 'bitrix-core:/opt/www'
+    depends_on:
+        - lighttpd
+
+  mysql:
+    build:
+      context: ${POD_ROOT}/services/mysql
+      args:
+        PROJECT_DB_NAME: $MYSQL_DB_NAME
+        CUSTOM_CONFIG_PATH: volumes/etc/mysql/conf.d
+        CUSTOM_CONFIG: bxdocker.cnf
+    container_name: "${COMPOSE_PROJECT_NAME}_mysql"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DB_NAME
+      MYSQL_USER: $MYSQL_DB_USER
+      MYSQL_PASSWORD: $MYSQL_DB_PASSWORD
+    network_mode: service:lighttpd
+    volumes:
+      - 'bitrix-db:/var/lib/mysql'
+    depends_on:
+        - lighttpd
+
+  bitrix:
+    build: ${POD_ROOT}/services/bitrix
+    container_name: "${COMPOSE_PROJECT_NAME}_bitrix"
+    volumes:
+      # - '${POD_ROOT}/services/bitrix/volumes/etc/lsyncd:/etc/lsyncd'
+      # - '${POD_ROOT}/services/bitrix/volumes/docker-entrypoint.sh:/docker-entrypoint.sh'
+      - 'bitrix-core:/tmp/bitrix-core'
+    depends_on:
+        - php
+
+  bitrix-db:
+    build: ${POD_ROOT}/services/bitrix-db
+    container_name: "${COMPOSE_PROJECT_NAME}_bitrix-db"
+    volumes:
+      # - '${POD_ROOT}/services/bitrix-db/volumes/etc/lsyncd:/etc/lsyncd'
+      # - '${POD_ROOT}/services/bitrix-db/volumes/docker-entrypoint.sh:/docker-entrypoint.sh'
+      - 'bitrix-db:/tmp/mysql'
+    depends_on:
+        - mysql
+
+
+volumes:
+  bitrix-core:
+  bitrix-db:

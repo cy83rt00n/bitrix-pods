@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+
+    lighttpd:
+        build:
+            context: ""
+            dockerfile: ./docker-services/lighttpd/Dockerfile
+        container_name: "${COMPOSE_PROJECT_NAME}_lighttpd"
+        tty: true
+        ports:
+            - "10080:80"
+        volumes:
+            - "${LIGHTY_VOLUMES_PREFIX}/etc/lighttpd:/etc/lighttpd"
+            - "${LIGHTY_VOLUMES_PREFIX}/www/lighttpd:/var/www/lightppd"

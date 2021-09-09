@@ -1,0 +1,24 @@
+### BEGIN INIT INFO
+# Provides: ivideon-shutdown
+# Required-Start: mysql
+# Should-Stop: mysql
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+### END INIT INFO
+
+. /lib/lsb/init-functions
+
+COLOR="\e[36m"
+RESET_COLOR="\e[0m"
+
+case ${1} in
+start)
+    log_success_msg "${COLOR}HELLO WORLD!${RESET_COLOR}"
+    echo 'init.d start' > /var/dump/iv-shut
+    ;;
+stop)
+    log_success_msg "${COLOR}GOODBYE WORLD!${RESET_COLOR}"
+    /usr/bin/dump-ivideon-database
+    ;;
+*) ;;
+esac

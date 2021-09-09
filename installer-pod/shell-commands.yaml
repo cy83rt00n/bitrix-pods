@@ -1,0 +1,20 @@
+build-php: "COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f ./docker-compose.yml --env-file ./.env build --force-rm php"
+build-mysql: "COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f ./docker-compose.yml --env-file ./.env build --force-rm mysql"
+build-parallel: "COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f ./docker-compose.yml --env-file ./.env build --force-rm --parallel php mysql"
+buildkit-build-php: "DOCKER_BUILDKIT=1 docker-compose -f ./docker-compose.yml --env-file ./.env build --force-rm php"
+buildkit-build-mysql: "DOCKER_BUILDKIT=1 docker-compose -f ./docker-compose.yml --env-file ./.env build --force-rm mysql"
+buildkit-build-parallel: "DOCKER_BUILDKIT=1 docker-compose -f ./docker-compose.yml --env-file ./.env build --force-rm --parallel php mysql"
+run-pod: "docker-compose -f ./docker-compose.yml --env-file ./.env up"
+daemon-run-pod: "docker-compose -f ./docker-compose.yml --env-file ./.env up -d"
+down-pod: "docker-compose -f ./docker-compose.yml --env-file ./.env down"
+bash-in-service: "docker-compose exec $SERVICE_NAME bash"
+
+build-installer-pod: "COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f ./bx-installer.dc.yaml --env-file ./bx-installer.env build --force-rm --no-cache"
+run-installer-pod: "docker-compose -f ./bx-installer.dc.yaml --env-file ./bx-installer.env up"
+down-installer-pod: "docker-compose -f ./bx-installer.dc.yaml --env-file ./bx-installer.env down"
+
+commit-bitrix-installer-pod: "docker commit bx-installer_bitrix bx-origin_bitrix:v1.0.0"
+tag-bitrix-installer-pod: "docker tag bx-origin_bitrix:v1.0.0 bx-origin_bitrix:latest"
+
+commit-bitrix-db-installer-pod: "docker commit bx-installer_bitrix-db bx-origin_bitrix-db:v1.0.0"
+tag-bitrix-db-installer-pod: "docker tag bx-origin_bitrix-db:v1.0.0 bx-origin_bitrix-db:latest"

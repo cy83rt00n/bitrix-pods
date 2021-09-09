@@ -1,0 +1,34 @@
+settings {
+        statusInterval = 1,
+        nodaemon = true,
+        insist = true
+}
+
+--daemon_bash = {
+--    delay = 5,
+--    maxProcesses = 3,
+--    onCreate = "cp -r ^sourcePathname ^targetPathname",
+--    onModify = "cp -r ^sourcePathname ^targetPathname",
+--    onDelete = "rm -rf ^targetPathname",
+--    onMove   = "mv ^o.targetPathname ^d.targetPathname",
+--}
+--
+--sync {
+--    daemon_bash,
+--    source = "/tmp/mysql",
+--    target = "/persistent-data/mysql"
+--}
+
+sync {
+    default.rsync,
+    delay = 5,
+    maxProcesses = 3,
+    source = "/tmp/mysql",
+    target = "/persistent-data/mysql",
+    rsync = {
+            timeout = 3000,
+            update = true,
+            archive = true,
+            compress = true,
+    }
+}
